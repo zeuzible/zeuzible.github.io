@@ -64,6 +64,7 @@
 body {
     background: #000;
     font-family: 'Orbitron', sans-serif;
+    cursor: none;
 }
 
 #icon {
@@ -101,4 +102,30 @@ body {
 
 .text-small3 {
     font-size: 2em;
+}
+
+.cursor {
+    z-index: 999;
+    position: fixed;
+    background: #ffffff;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 20px #ffffff,
+                0 0 60px #ffffff,
+                0 0 100px #ffffff;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+.cursor:before{
+    content: '';
+    position: absolute;
+    background: #ffffff;
+    width: 50px;
+    height: 50px;
+    opacity: 0.2;
+    transform: translate(-30%, -30%);
+    border-radius: 50%;
 }
