@@ -5,73 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link rel="icon" type="image/x-icon" href="assets\z.ico">
+    <link rel="icon" type="image/x-icon" href="assets/z.ico">
     <title>Portfolio</title>
 </head>
 <body>
-    <div id="profile-area">
+
+    <!-- Profile Section -->
+    <section id="profile-area">
         <div id="profile-container">
-            <img id="pf-pic" src="assets\zeuz_newlogo.png"/>
-            <div id="pf-name" class="anim-typewriter">zeuzible</div>
-            <div id="pf-desc">Development Portfolio</div>
+            <img id="pf-pic" src="assets/zeuz_newlogo.png" alt="Zeuzible Profile Picture" />
+            <h1 id="pf-name" class="anim-typewriter">zeuzible</h1>
+            <p id="pf-desc">Development Portfolio</p>
         </div>
-    </div>
+    </section>
 
-    <div class="socials" id="skills-header">WHERE YOU CAN FIND ME:</div>
-    <div class="skill-global" id="skills-container">
-        <a href="https://github.com/zeuzible" target="_blank">
-            <div id="social">
-                <img src="https://cdn.simpleicons.org/github/white"/>
-                <div id="skill-name">Github</div>
-            </div>
-        </a>
-        <a href="https://x.com/zeuzible" target="_blank">
-            <div id="social">
-                <img src="https://cdn.simpleicons.org/x/white"/>
-                <div id="skill-name">X</div>
-            </div>
-        </a>
-        <a href="https://www.twitch.tv/zeuzible" target="_blank">
-            <div id="social">
-                <img src="https://cdn.simpleicons.org/twitch/white"/>
-                <div id="skill-name">Twitch</div>
-            </div>
-        </a>
-        <a href="https://steamcommunity.com/id/zeuzible/" target="_blank">
-            <div id="social">
-                <img src="https://cdn.simpleicons.org/steam/white"/>
-                <div id="skill-name">Steam</div>
-            </div>
-        </a>
-    </div>
+    <!-- Social Links -->
+    <section id="socials-section">
+        <h2 class="skills-header">WHERE YOU CAN FIND ME:</h2>
+        <div class="socials">
+            <a href="https://github.com/zeuzible" target="_blank" class="social">
+                <img src="https://cdn.simpleicons.org/github/white" alt="GitHub" />
+                <span class="social-name">GitHub</span>
+            </a>
+            <a href="https://x.com/zeuzible" target="_blank" class="social">
+                <img src="https://cdn.simpleicons.org/x/white" alt="X (Twitter)" />
+                <span class="social-name">X</span>
+            </a>
+            <a href="https://www.twitch.tv/zeuzible" target="_blank" class="social">
+                <img src="https://cdn.simpleicons.org/twitch/white" alt="Twitch" />
+                <span class="social-name">Twitch</span>
+            </a>
+            <a href="https://steamcommunity.com/id/zeuzible/" target="_blank" class="social">
+                <img src="https://cdn.simpleicons.org/steam/white" alt="Steam" />
+                <span class="social-name">Steam</span>
+            </a>
+        </div>
+    </section>
 
-    <div class="skill-global" id="skills-header">SOME OF MY SKILLS:</div>
-    <div class="skill-global" id="skills-container">
-        <div id="skill">
-            <img src="https://cdn.simpleicons.org/html5/white"/>
-            <div id="skill-name">HTML5</div>
-            <div id="skill-exp">~2 years</div>
+    <!-- Skills Section -->
+    <section id="skills-section">
+        <h2 class="skills-header">SOME OF MY SKILLS:</h2>
+        <div class="skills-container">
+            <div class="skill">
+                <img src="https://cdn.simpleicons.org/html5/white" alt="HTML5" />
+                <span class="skill-name">HTML5</span>
+                <span class="skill-exp" data-start-year="2023" data-start-month="8"></span>
+            </div>
+            <div class="skill">
+                <img src="https://cdn.simpleicons.org/css/white" alt="CSS" />
+                <span class="skill-name">CSS</span>
+                <span class="skill-exp" data-start-year="2023" data-start-month="8"></span>
+            </div>
+            <div class="skill">
+                <img src="https://cdn.simpleicons.org/javascript/white" alt="JavaScript" />
+                <span class="skill-name">JavaScript</span>
+                <span class="skill-exp" data-start-year="2024" data-start-month="1"></span>
+            </div>
+            <div class="skill">
+                <img src="https://cdn.simpleicons.org/lua/white" alt="Lua" />
+                <span class="skill-name">Lua</span>
+                <span class="skill-exp" data-start-year="2023" data-start-month="8"></span>
+            </div>
+            <div class="skill">
+                <img src="https://cdn.simpleicons.org/github/white" alt="GitHub" />
+                <span class="skill-name">GitHub</span>
+                <span class="skill-exp" data-start-year="2021" data-start-month="9"></span>
+            </div>
         </div>
-        <div id="skill">
-            <img src="https://cdn.simpleicons.org/css/white"/>
-            <div id="skill-name">CSS</div>
-            <div id="skill-exp">~2 years</div>
-        </div>
-        <div id="skill">
-            <img src="https://cdn.simpleicons.org/javascript/white"/>
-            <div id="skill-name">JavaScript</div>
-            <div id="skill-exp">~1 year</div>
-        </div>
-        <div id="skill">
-            <img src="https://cdn.simpleicons.org/lua/white"/>
-            <div id="skill-name">Lua</div>
-            <div id="skill-exp">~2 years</div>
-        </div>
-        <div id="skill">
-            <img src="https://cdn.simpleicons.org/github/white"/>
-            <div id="skill-name">Github</div>
-            <div id="skill-exp">~2 years</div>
-        </div>
-    </div>
+    </section>
+
+    <script src="main.js" defer></script>
 </body>
 </html>
