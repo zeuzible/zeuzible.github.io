@@ -7,12 +7,29 @@
     cursor: url('assets/normal.png'), auto;
     --skill-size: 120px;
     --social-size: 100px;
+    --accent: 140, 180, 255;
+    --accent-2: 190, 140, 255;
+    --mx: 0;
+    --my: 0;
+    --scroll: 0;
 }
 
 body {
-    background-color: rgb(30, 30, 30);
+    background-color: #05060f;
     margin: 0;
     overflow-x: hidden;
+    min-height: 100vh;
+    /* Center the whole content stack vertically and horizontally */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0;
+    box-sizing: border-box;
+}
+
+body > section {
+    width: 100%;
 }
 
 /* Links */
@@ -21,34 +38,249 @@ a {
     color: white;
 }
 
+/* ---------------- SPACE BACKGROUND ---------------- */
+#space {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 50% 120%, #1a1240 0%, #0a0b1e 45%, #05060f 100%);
+}
+
+#starfield {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.nebula {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.45;
+    animation: nebulaDrift 40s ease-in-out infinite alternate;
+}
+
+.nebula-1 {
+    width: 60vmax;
+    height: 45vmax;
+    top: -15vmax;
+    left: -15vmax;
+    background: radial-gradient(circle, rgba(110, 60, 200, 0.7), transparent 70%);
+}
+
+.nebula-2 {
+    width: 55vmax;
+    height: 40vmax;
+    bottom: -15vmax;
+    right: -15vmax;
+    background: radial-gradient(circle, rgba(30, 120, 200, 0.6), transparent 70%);
+    animation-delay: -20s;
+}
+
+@keyframes nebulaDrift {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(5vw, 3vh) scale(1.15); }
+}
+
+/* Planets: the wrapper handles mouse/scroll parallax, the planet itself floats */
+.planet-wrap {
+    position: absolute;
+    transform: translate(
+        calc(var(--mx) * var(--depth) * -60px),
+        calc(var(--my) * var(--depth) * -60px + var(--scroll) * var(--depth) * -0.3px)
+    );
+    transition: transform 0.6s var(--ease-out-3, ease-out);
+}
+
+.planet {
+    position: relative;
+    animation: float var(--float-time, 12s) ease-in-out infinite;
+}
+
+.planet-body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-25px) rotate(3deg); }
+}
+
+/* Ringed gas giant */
+.planet-wrap-giant {
+    --depth: 1;
+    top: 12%;
+    right: 6%;
+}
+
+.planet-giant {
+    width: 220px;
+    height: 220px;
+    --float-time: 14s;
+}
+
+.planet-giant .planet-body {
+    background:
+        radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.35), transparent 40%),
+        repeating-linear-gradient(-18deg,
+            #e0905a 0px, #e0905a 14px,
+            #c26a45 14px, #c26a45 22px,
+            #f0b37a 22px, #f0b37a 34px,
+            #a8553c 34px, #a8553c 40px);
+    box-shadow:
+        inset -40px -30px 60px rgba(10, 5, 30, 0.85),
+        inset 10px 8px 25px rgba(255, 220, 180, 0.25),
+        0 0 60px rgba(240, 150, 90, 0.25);
+}
+
+.ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 380px;
+    height: 380px;
+    margin: -190px 0 0 -190px;
+    border-radius: 50%;
+    border: 18px solid transparent;
+    border-color: rgba(230, 200, 160, 0.55);
+    box-shadow: 0 0 0 6px rgba(230, 200, 160, 0.15), inset 0 0 0 4px rgba(255, 230, 200, 0.25);
+    transform: rotateX(76deg) rotateY(-12deg);
+}
+
+.ring-back { z-index: 0; }
+
+/* Front half of the ring is drawn above the planet body */
+.ring-front {
+    z-index: 2;
+    clip-path: inset(50% 0 0 0);
+}
+
+/* Icy blue planet */
+.planet-wrap-ice {
+    --depth: 0.6;
+    bottom: 10%;
+    left: 5%;
+}
+
+.planet-ice {
+    width: 120px;
+    height: 120px;
+    --float-time: 10s;
+    animation-delay: -4s;
+}
+
+.planet-ice .planet-body {
+    background:
+        radial-gradient(circle at 65% 70%, rgba(255, 255, 255, 0.25), transparent 25%),
+        radial-gradient(circle at 30% 30%, #b8ecff, #3d8fd6 45%, #183a7a 80%);
+    box-shadow:
+        inset -25px -18px 40px rgba(5, 10, 40, 0.85),
+        0 0 40px rgba(90, 180, 255, 0.35);
+}
+
+/* Small distant moon */
+.planet-wrap-moon {
+    --depth: 0.3;
+    top: 58%;
+    right: 22%;
+}
+
+.planet-moon {
+    width: 46px;
+    height: 46px;
+    --float-time: 8s;
+    animation-delay: -2s;
+}
+
+.planet-moon .planet-body {
+    background:
+        radial-gradient(circle at 60% 35%, rgba(0, 0, 0, 0.25) 0 10%, transparent 11%),
+        radial-gradient(circle at 35% 65%, rgba(0, 0, 0, 0.2) 0 8%, transparent 9%),
+        radial-gradient(circle at 35% 30%, #e8e4f0, #8a8598 70%);
+    box-shadow: inset -10px -8px 16px rgba(5, 5, 20, 0.85);
+}
+
 /* ---------------- PROFILE ---------------- */
 #profile-area {
     display: flex;
     justify-content: center;
-    margin: 20px 0;
 }
 
 #profile-container {
     width: 300px;
     text-align: center;
-    padding: 40px;
+    padding: 20px 40px 40px;
+}
+
+#pf-pic-wrap {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+}
+
+/* Rotating glow ring behind the avatar */
+#pf-pic-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: conic-gradient(rgb(var(--accent)), rgb(var(--accent-2)), transparent 60%, rgb(var(--accent)));
+    filter: blur(2px);
+    animation: spin 6s linear infinite;
 }
 
 #pf-pic {
+    position: relative;
+    display: block;
     border-radius: 50%;
     width: 150px;
     height: 150px;
+    box-shadow: 0 0 40px rgba(var(--accent), 0.45);
+}
+
+/* Tiny moon orbiting the avatar */
+.orbit {
+    position: absolute;
+    inset: -22px;
+    border-radius: 50%;
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    animation: spin 10s linear infinite;
+}
+
+.orbit-moon {
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 0 10px 2px rgba(var(--accent), 0.9);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
 #pf-name {
     position: relative;
     top: 7.5%;
     width: 4.6em;
-    margin: 10px auto;
+    margin: 30px auto 10px;
     border-right: 2px solid rgba(255,255,255,.75);
     font-size: 1.8rem;
     white-space: nowrap;
     overflow: hidden;
+    text-shadow: 0 0 12px rgba(var(--accent), 0.8);
 }
 
 .anim-typewriter {
@@ -70,6 +302,8 @@ a {
     margin-top: 10px;
     font-size: 1.2rem;
     padding-top: 14px;
+    color: rgba(220, 230, 255, 0.8);
+    letter-spacing: 0.08em;
 }
 
 /* ---------------- SOCIALS ---------------- */
@@ -81,20 +315,29 @@ a {
     margin-bottom: 30px;
 }
 
-.social {
+/* Shared frosted-glass card look */
+.social, .skill {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    text-align: center;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02)),
+        rgba(15, 18, 40, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    transition: transform 0.25s var(--ease-spring-3, ease-out),
+                border-color 0.25s, box-shadow 0.25s;
+}
+
+.social {
     width: var(--social-size);
     height: var(--social-size);
-    padding: 10px;
-    border: 3px solid gray;
-    border-radius: 10px;
-    text-align: center;
-    background: linear-gradient(45deg, rgb(207, 207, 207), rgb(77, 77, 77));
-    background-size: 200% 200%;
-    transition: transform 0.2s ease-in-out;
 }
 
 .social img {
@@ -108,20 +351,22 @@ a {
     font-weight: bold;
 }
 
-/* Hover effect for socials */
-.social:hover {
-    background-image: linear-gradient(to bottom right, rgb(78, 78, 78), rgb(255, 255, 255));
-    cursor: url('assets/select.png'), auto;
-    transform: scale(1.1);
-    animation: gradientAnim 1.5s infinite alternate;
-}
-
 /* ---------------- SKILLS ---------------- */
 .skills-header {
     text-align: center;
     font-size: 2rem;
     margin: 20px 0;
     font-family: 'Overpass', sans-serif;
+    background: linear-gradient(90deg, #fff, rgb(var(--accent)), rgb(var(--accent-2)), #fff);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: headerShimmer 8s linear infinite;
+}
+
+@keyframes headerShimmer {
+    to { background-position: 300% 0; }
 }
 
 .skills-container {
@@ -132,19 +377,8 @@ a {
 }
 
 .skill {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     width: var(--skill-size);
     height: var(--skill-size);
-    padding: 10px;
-    border: 3px solid gray;
-    border-radius: 10px;
-    text-align: center;
-    background: linear-gradient(45deg, rgb(207, 207, 207), rgb(77, 77, 77));
-    background-size: 200% 200%;
-    transition: transform 0.2s ease-in-out;
 }
 
 .skill img {
@@ -162,21 +396,22 @@ a {
 .skill-exp {
     font-size: 1.1rem;
     font-weight: bold;
+    color: rgb(var(--accent));
 }
 
-/* Hover effect for skills */
-.skill:hover {
-    background-image: linear-gradient(to bottom right, rgb(78, 78, 78), rgb(255, 255, 255));
+/* Hover effect for cards */
+.social:hover, .skill:hover {
     cursor: url('assets/select.png'), auto;
-    transform: scale(1.1);
-    animation: gradientAnim 1.5s infinite alternate;
+    transform: translateY(-6px) scale(1.08);
+    border-color: rgba(var(--accent), 0.8);
+    box-shadow:
+        0 0 25px rgba(var(--accent), 0.45),
+        0 0 60px rgba(var(--accent-2), 0.25),
+        inset 0 0 20px rgba(var(--accent), 0.15);
 }
 
-/* Gradient animation */
-@keyframes gradientAnim {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+.social:hover img, .skill:hover img {
+    filter: drop-shadow(0 0 8px rgba(var(--accent), 0.9));
 }
 
 /* ---------------- RESPONSIVE ---------------- */
@@ -196,5 +431,17 @@ a {
 
     .skills-header {
         font-size: 1.5rem;
+    }
+
+    .planet-giant { scale: 0.55; }
+    .planet-wrap-giant { top: -40px; right: -120px; }
+    .planet-wrap-ice { left: -30px; bottom: 4%; }
+    .planet-ice { width: 80px; height: 80px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
     }
 }

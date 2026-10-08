@@ -10,10 +10,33 @@
 </head>
 <body>
 
+    <!-- Space Background -->
+    <div id="space" aria-hidden="true">
+        <div class="nebula nebula-1"></div>
+        <div class="nebula nebula-2"></div>
+        <canvas id="starfield"></canvas>
+        <div class="planet-wrap planet-wrap-giant">
+            <div class="planet planet-giant">
+                <div class="ring ring-back"></div>
+                <div class="planet-body"></div>
+                <div class="ring ring-front"></div>
+            </div>
+        </div>
+        <div class="planet-wrap planet-wrap-ice">
+            <div class="planet planet-ice"><div class="planet-body"></div></div>
+        </div>
+        <div class="planet-wrap planet-wrap-moon">
+            <div class="planet planet-moon"><div class="planet-body"></div></div>
+        </div>
+    </div>
+
     <!-- Profile Section -->
     <section id="profile-area">
         <div id="profile-container">
-            <img id="pf-pic" src="assets/zeuz_newlogo.png" alt="Zeuzible Profile Picture" />
+            <div id="pf-pic-wrap">
+                <img id="pf-pic" src="assets/zeuz_newlogo.png" alt="Zeuzible Profile Picture" />
+                <span class="orbit"><span class="orbit-moon"></span></span>
+            </div>
             <h1 id="pf-name" class="anim-typewriter">zeuzible</h1>
             <p id="pf-desc">Development Portfolio</p>
         </div>
@@ -74,6 +97,7 @@
         </div>
     </section>
 
+    <script src="space.js" defer></script>
     <script src="main.js" defer></script>
 </body>
 </html>
