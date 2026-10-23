@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GTA Car Lookup</title>
+<link rel="icon" type="image/x-icon" href="../assets/z.ico">
+<link rel="stylesheet" href="../nav.css">
+<style>
+    :root {
+        --bg: #05060f;
+        --panel: #10132a;
+        --border: #23284a;
+        --text: #e6e8f5;
+        --muted: #8b91ad;
+        --accent: #8cb4ff;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding-top: var(--nav-h); background: var(--bg); color: var(--text); font: 14px/1.4 system-ui, sans-serif; }
+    header {
+        position: sticky; top: var(--nav-h); z-index: 10; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+        padding: 14px 16px; background: rgba(5, 6, 15, .95); border-bottom: 1px solid var(--border);
+    }
+    h1 { margin: 0; font-size: 18px; }
+    #search {
+        flex: 1; min-width: 200px; padding: 9px 12px; font-size: 15px; color: var(--text);
+        background: var(--panel); border: 1px solid var(--border); border-radius: 8px; outline: none;
+    }
+    #search:focus { border-color: var(--accent); }
+    #count { color: var(--muted); }
+    main { padding: 16px; }
+    section h2 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+    #pinnedWrap { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    #pinned { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+    .card { position: relative; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .card.is-pinned { border-color: var(--accent); }
+    .img { aspect-ratio: 16 / 9; display: grid; place-items: center; background: #0c0d10; color: var(--muted); font-size: 12px; }
+    .img img { width: 100%; height: 100%; object-fit: contain; }
+    .info { padding: 8px 10px 10px; }
+    .name { font-weight: 600; font-size: 15px; }
+    .meta { color: var(--muted); font-size: 12px; }
+    .model { font-family: ui-monospace, Consolas, monospace; }
+    .pin {
+        position: absolute; top: 8px; right: 8px; padding: 4px 10px; font-size: 12px; font-weight: 600; cursor: pointer;
+        color: var(--text); background: rgba(0, 0, 0, .6); border: 1px solid var(--border); border-radius: 6px;
+    }
+    .pin:hover { border-color: var(--accent); }
+    .is-pinned .pin { background: var(--accent); color: #111; border-color: var(--accent); }
+    .empty { color: var(--muted); padding: 30px 0; text-align: center; }
+    @media (max-width: 500px) { #pinned { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<nav class="site-nav">
+    <a href="/">Home</a>
+    <a href="/cars/" class="nav-btn" aria-current="page">GTA Car Lookup</a>
+</nav>
+<header>
+    <h1>GTA Car Lookup</h1>
+    <input id="search" type="search" placeholder="Search name, brand or model..." autofocus autocomplete="off">
+    <span id="count"></span>
+</header>
+<main>
+    <section id="pinnedWrap" hidden>
+        <h2>Pinned</h2>
+        <div id="pinned" class="grid"></div>
+    </section>
+    <section>
+        <div id="results" class="grid"></div>
+        <div id="empty" class="empty" hidden>No vehicles match.</div>
+    </section>
+</main>
+
+<script src="cars.js"></script>
+<script>
+    // Variants that share a body with a vehicle FiveM has a picture for
+    const IMAGE_ALIAS = { driftrt3000: 'rt3000', driftsentinel2: 'sentinel2' };
+    const IMAGE_URL = model => `https://docs.fivem.net/vehicles/${IMAGE_ALIAS[model] || model}.webp`;
+    const STORAGE_KEY = 'carLookup.pinned';
+    const byModel = new Map(CARS.map(c => [c.model, c]));
+
+    const $search = document.getElementById('search');
+    const $results = document.getElementById('results');
+    const $pinned = document.getElementById('pinned');
+    const $pinnedWrap = document.getElementById('pinnedWrap');
+    const $count = document.getElementById('count');
+    const $empty = document.getElementById('empty');
+
+    let pinned = [];
+    try { pinned = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch {}
+    pinned = pinned.filter(m => byModel.has(m));
+
+    function savePinned() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(pinned)); } catch {}
+    }
+
+    function togglePin(model) {
+        const i = pinned.indexOf(model);
+        if (i === -1) pinned.unshift(model); else pinned.splice(i, 1);
+        savePinned();
+        renderPinned();
+        renderResults();
+    }
+
+    function card(car) {
+        const el = document.createElement('div');
+        el.className = 'card' + (pinned.includes(car.model) ? ' is-pinned' : '');
+
+        const imgWrap = document.createElement('div');
+        imgWrap.className = 'img';
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.alt = car.name;
+        img.src = IMAGE_URL(car.model);
+        img.onerror = () => { imgWrap.textContent = 'No image available'; };
+        imgWrap.append(img);
+
+        const info = document.createElement('div');
+        info.className = 'info';
+        const name = document.createElement('div');
+        name.className = 'name';
+        name.textContent = car.name;
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        meta.innerHTML = `${car.brand ? escape(car.brand) + ' · ' : ''}<span class="model">${escape(car.model)}</span>${car.category ? ' · ' + escape(car.category) : ''}`;
+        info.append(name, meta);
+
+        const pin = document.createElement('button');
+        pin.className = 'pin';
+        pin.textContent = pinned.includes(car.model) ? 'Unpin' : 'Pin';
+        pin.onclick = () => togglePin(car.model);
+
+        el.append(imgWrap, info, pin);
+        return el;
+    }
+
+    function escape(s) {
+        return s.replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+
+    function renderPinned() {
+        $pinned.replaceChildren(...pinned.map(m => card(byModel.get(m))));
+        $pinnedWrap.hidden = pinned.length === 0;
+    }
+
+    function renderResults() {
+        const terms = $search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+        const matches = CARS.filter(c => {
+            const hay = `${c.name} ${c.brand} ${c.model}`.toLowerCase();
+            return terms.every(t => hay.includes(t));
+        });
+        $results.replaceChildren(...matches.map(card));
+        $count.textContent = `${matches.length} vehicle${matches.length === 1 ? '' : 's'}`;
+        $empty.hidden = matches.length > 0;
+    }
+
+    let debounce;
+    $search.addEventListener('input', () => {
+        clearTimeout(debounce);
+        debounce = setTimeout(renderResults, 120);
+    });
+
+    renderPinned();
+    renderResults();
+</script>
+</body>
+</html>

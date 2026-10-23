@@ -1,0 +1,53 @@
+/* Site-wide top navigation, shared by every page */
+:root {
+    --nav-h: 56px;
+}
+
+.site-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    font-family: 'Consolas', monospace;
+    background: rgba(8, 10, 24, 0.6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.site-nav a {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    color: rgba(220, 230, 255, 0.85);
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.2s, border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.site-nav a:hover {
+    color: #fff;
+}
+
+.site-nav .nav-btn {
+    border-color: rgba(140, 180, 255, 0.45);
+    background: rgba(140, 180, 255, 0.1);
+}
+
+.site-nav .nav-btn:hover {
+    border-color: rgba(140, 180, 255, 0.9);
+    box-shadow: 0 0 16px rgba(140, 180, 255, 0.35);
+}
+
+.site-nav a[aria-current="page"] {
+    color: #fff;
+    text-shadow: 0 0 10px rgba(140, 180, 255, 0.8);
+}
